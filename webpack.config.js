@@ -5,23 +5,16 @@ const config = require('config');
 /*-------------------------------------------------*/
 
 module.exports = {
-    // webpack optimization mode
     mode: (process.env.NODE_ENV ? process.env.NODE_ENV : 'development'),
 
-    // entry file(s)
     entry: './src/index.js',
 
-    // output file(s) and chunks
     output: {
-        library: 'UserList',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
         path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js',
-        publicPath: config.get('publicPath')
+        filename: 'main.js',
+        publicPath: '/'
     },
 
-    // module/loaders configuration
     module: {
         rules: [
             {
@@ -40,6 +33,22 @@ module.exports = {
             }
         ]
     },
+
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                default: false,
+                vendors: false,
+                // vendor chunk
+                vendor: {
+                    // sync + async chunks
+                    chunks: 'all',
+                    // import file path containing node_modules
+                    test: /node_modules/
+                }
+            }
+        }
+    }
 
     plugins: [
         new HTMLWebpackPlugin({
